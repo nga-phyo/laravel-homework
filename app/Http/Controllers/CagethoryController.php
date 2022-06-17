@@ -1,77 +1,121 @@
 <?php
 
 namespace App\Http\Controllers;
-
-use App\Models\Cagethory;
-
 use Illuminate\Http\Request;
+use App\Http\Requests\CagethoryRequest;
+use App\Models\Cagethory;
+use App\Models\Post;
+
+use Illuminate\Support\Facades\Validator;
+
 
 class CagethoryController extends Controller
 {
-   public function index()
-   {
+    public function index()
+    {
        $cagethory = Cagethory::all();
-       return view('posts.index',compact('cagethory'));
-   }
+        return view('posts.index',compact('cagethory'));
+    }
 
 
 
-   public function store()
-   {
-       $cagethory = new Cagethory();
+    public function store(Request $request)
+    {
 
-       $cagethory->title = request('title');
-       $cagethory->body = request('body');
-    //    $cagethory->title = 'first title';
-    //    $cagethory->body = 'second title';
-       $cagethory->created_at = now();
+        $validator = Validator::make($request->all(),[
+
+
+            'title'=> 'required',
+            'body'=> 'required',
+
+        ]);
+
+        if($validator->fails()){
+            return redirect('posts/create')
+            ->withErrors($validator)
+            ->withInput();
+        }
+
+        // $request->validate([
+
+        //     'title' =>'required',
+        //     'body' =>'required|min:5',
+        // ],
+        //[
+        //     'title.required' => 'title write pr',
+        //     'body.required' =>'reason write pr' ,
+        //      'body.min'=> 'a ne sone 5 lone ma ya pr mal'
+        // ]);
+
+
+
+
+        $cagethory = new Cagethory;
+        // $cagethory->title = request('title');
+        // $cagethory->body = request('body');
+        $cagethory->title = $request->title;
+        $cagethory->body = $request->body;
+
+        $cagethory->created_at = now();
+        $cagethory->updated_at = now();
+
+        $cagethory->save();
+
+        return redirect('/cagethories');
+    }
+
+    public function update(CagethoryRequest $request, $id)
+    {
+
+        // $request->validate([
+        //     'title'=>'required',
+        //     'body'=>'required|min:7',
+        // ],[
+        //     'title.required'=>'title write pr own my friend',
+        //     'body.required'=>'reason lay top write pr naw',
+        //     'body.min'=>'a ne sone 7 lone pr',
+        // ]);
+
+       $cagethory = Cagethory::find($id);
+
+
+    
+        $cagethory->title = $request->title;
+        $cagethory->body = $request->body;
        $cagethory->updated_at = now();
 
        $cagethory->save();
 
-       return redirect('cagethory');
-       
-   }
+       return redirect('/cagethories');
+    }
 
+    public function destroy($id)
+    {
+        Cagethory::destroy($id);
 
-   public function show($id)
-   {
-       $cagethory = Cagethory::find($id);
+        return redirect('/cagethories');
+    }
 
-       return view('posts.home',compact('cagethory'));
-   }
-
-
-   public function update($id)
-   {
-       $cagethory = Cagethory::find($id);
-       $cagethory->title = 'second title change';
-       $cagethory->body = 'second body change';
-       $cagethory->updated_at = now();
-
-       $cagethory->save();
-
-       return  redirect('cagethory');
-   }
-
-
-   public function destroy($id)
-   {
-       Cagethory::destroy($id);
-
-       return redirect('/cagethory');
-   }
-
-   public function create()
-   {
-       return view('posts.create');
-   }
-
-
-   public function edit($id)
-   {
+    public function show($id)
+    {
         $cagethory = Cagethory::find($id);
+        
+        return view('posts.show',compact('cagethory'));
 
-        return view('posts.edit');
-   }
+
+    }
+
+    public function create()
+    {
+        
+        return view('posts.create');
+    }
+
+    public function edit($id)
+    {
+       $cagethory = Cagethory::find($id);
+
+       return view('posts.edit',compact('cagethory'));
+        
+    }
 }
