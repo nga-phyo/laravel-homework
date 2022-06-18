@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\CagethoryController;
+use App\Http\Controllers\LoginController;
+use App\Http\Controllers\RegisterController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -26,4 +28,15 @@ use Illuminate\Support\Facades\Route;
 // Route::get('/cagethory/edit/{id}',[PostController::class,'edit']);
 
 
+// Route::get('/cagethory',[CagethoryController::class],'index');
 Route::resource('cagethories',CagethoryController::class);
+
+
+// Route::get('register', [LoginController::class, 'create']);
+Route::get('register', [RegisterController::class, 'create']);
+Route::post('register', [RegisterController::class, 'store']);
+
+Route::get('login',[LoginController::class, 'create']);
+Route::post('login',[LoginController::class, 'store']);
+
+Route::get('logout',[LoginController::class, 'destory']);

@@ -5,6 +5,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests\CagethoryRequest;
 use App\Models\Cagethory;
 use App\Models\Post;
+use Illuminate\Support\Facades\Auth;
 
 use Illuminate\Support\Facades\Validator;
 
@@ -13,8 +14,23 @@ class CagethoryController extends Controller
 {
     public function index()
     {
-       $cagethory = Cagethory::all();
-        return view('posts.index',compact('cagethory'));
+
+        // $user = Auth::user();
+
+        // if(Auth::check()){
+        //     return 'Login';
+        // }else {
+        //     return 'No login';
+        // }
+       
+        // if( Auth::check()){
+        //     return 'Logged in';
+        // }
+        // else {
+        //     return 'Not Loggin';
+        // }
+         $cagethory = Cagethory::all();
+         return view('posts.index',compact('cagethory'));
     }
 
 
@@ -25,8 +41,9 @@ class CagethoryController extends Controller
         $validator = Validator::make($request->all(),[
 
 
-            'title'=> 'required',
-            'body'=> 'required',
+            'name'=> 'required',
+            'email'=> 'required',
+            'password'=>'required'
 
         ]);
 
